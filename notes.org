@@ -1,0 +1,30 @@
+* Introduction to MongoDB using the MEAN Stack
+** Introduction to MongoDB and NodeJS
+*** Starting a standalone mongod and connecting with shell
+    Install mongodb (I shall use dnf on Fedora).
+    
+    Create the dir ~/data/db
+    
+    Start mongod with:
+    $ mongod --dbpath ~/data/db
+    
+    In another shell you can start the mongo shell you allows you to
+    do basic experimentation with MongoDB:
+    $ mongo
+
+    MongoDB stores object as BSON, which is a strict superset of JSON.
+    
+    Insert a single document with just one key, hello, and one value, world:
+    > db.test.insert({ hello: "world"});
+
+    MongoDB stores document in separate collections. Each collection
+    belongs to a database, and collection names are unique within a
+    single database. Typing db you can see the current database.  In
+    this case we have told MongoDB to insert the document in the
+    collection named 'test'.
+    
+    Then we can query it back:
+    > db.test.findOne({ hello: "world"});
+
+    In this case we have told MongoDB to search for document in the
+    collection named 'test'.
