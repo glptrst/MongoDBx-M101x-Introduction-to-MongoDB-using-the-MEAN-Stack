@@ -28,3 +28,74 @@
 
     In this case we have told MongoDB to search for document in the
     collection named 'test'.
+
+**** quiz
+     In order to find all documents in the 'movies' collection for
+     which the 'leadActor' key equals "Arnold Schwarzenegger", which
+     of the following commands would you execute in the mongo shell?
+     
+     1) db.exec('SELECT * FROM movies WHERE leadActor="Arnold
+        Schwarzenegger"')
+
+     2) db.movies.find({ leadActor: 'Arnold Schwarzenegger' })
+
+     3) db.movies.insert({ leadActor: 'Arnold Schwarzenegger' })
+
+     4) db.sample.find({ leadActor: 'Arnold Schwarzenegger' })
+
+	
+     Answer: 2.
+*** package.json: installing dependencies with npm
+    Install NodeJS. NodeJS comes with npm included.
+
+    With 
+    $ node -v
+    and 
+    $ npm -v 
+    you can check the versions.
+    
+    When starting a new NodeJS application, the first thing you want
+    to do is create a package dot json file.  Package dot json describes
+    your app's meta data, including its name, the version, the author, and
+    any the npm packages that it depends on.
+
+    For this course, you will primarily be concerned with package dot
+    json as a way to declare which packages your app depends on.
+    
+    Let's create a package dot json that depends on Underscore.
+    Create a file name 'package.json' with this content:
+    {
+      "dependencies": {
+        "underscore" "1.5.2"
+      }
+    }
+    
+    To install the dependencies, run:
+    $ npm install
+
+    You should see now a node_modules directory in your current
+    working directory. If you look in the node_modules directory you
+    should see a directory named underscore. This is where the
+    underscore package lives.
+
+    You can now write a simple NodeJS program called 'index.js' that
+    includes underscore, suing NodeJS' built-in require function
+    (Underscore has a simple .each function that executes a function
+    for every element in an array):
+
+    var _ = require('underscore');
+
+    _.each([1,2,3], function(v){
+      console.log(v);
+    });
+
+    
+    You can now run the program with:
+    $ node index.js
+
+    Note that each NodeJS project has its own node underscore modules
+    directory where npm installs packages.
+
+    In general it is a good choice to not track node modules with source
+    control (unless you really know what you are doing).
+    
