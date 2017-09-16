@@ -332,4 +332,113 @@
      });
    #+END_SRC
    
+*** quiz
+    Assuming that db is a MongoDB database handle, which of the
+    following node.js code examples will print all documents in the
+    collection named "movies" where the key "director" is equal to
+    "George Lucas"?
+
+    A) 
+    #+BEGIN_SRC javascript
+    db.collection('movies').find({ director: 'George Lucas' }, function(error, docs) { 
+      console.log(docs); 
+    });    
+    #+END_SRC
+
+    B) 
+    #+BEGIN_SRC javascript
+    db.collection('movies').find({ director: 'George Lucas' }).toArray(function(error, docs) {
+      console.log(docs);
+    });
+    #+END_SRC
+
+    C) 
+    #+BEGIN_SRC javascript
+    console.log(db.collection('movies').find({ director: 'George Lucas' }));
+    #+END_SRC
+
+    D)
+    #+BEGIN_SRC javascript
+    console.log(db.collection('movies').find({ director: 'George Lucas' }).toArray());
+    #+END_SRC
+
+    
+    Answer: B.
+** Node.js concurrency and event loop fundamentals
+   JavaScript is a language built to run in an event loop. It's called
+   an event loop because JavaScript interpreters run in a loop that
+   looks something like this:
+
+   while (waitForEvent()) {
+     processEvent();
+   }
+
+   This loop has numerous interesting semantics. First of all, the
+   loop is single threaded, so only one event handler can run at any
+   given time. Second, this loop provides an effective way to break up
+   long running operations, like network I/O.
    
+   Therefore, instead of thinking of JavaScript as an imperative
+   programming language like Java or C++, it helps to think of
+   JavaScript as running in a loop that executes event handlers that
+   can register other event handlers.
+
+   At a high level, this is how the Mongo client dot connect function
+   you saw in the Connecting to MongoDB lesson works. Instead of
+   blocking the event loop wall, it connects. The Mongo client dot
+   connect function registers an event handler that tells Node.js to
+   execute your callback function once the network I/O that connects
+   to the MongoDB server is done.
+
+   To see the event loop in action, you should asked yourself, what
+   would the following program print out?
+
+   #+BEGIN_SRC javascript
+   setTimeout(function(){
+     console.log('In timeout!');
+   }, 0);
+
+   console.log('Not in timeout');   
+   #+END_SRC
+
+   If you said not in timeout will print before in timeout, you're
+   right. This is because set timeout registers an event handler
+   which gets called on the next iteration of the event loop, whereas
+   the not in timeout statement gets printed in the current iteration
+   of the event loop.
+   Typically code that executes in the current iteration of the event
+   loop and thus blocks the event loop, like this first log statement,
+   is known as synchronous code, whereas code that registers an event
+   handler and thus doesn't block the event loop is known as
+   asynchronous code.
+
+   In particular, you will notice that every MongoDB operation that
+   you'll use in this course uses callbacks, and is thus asynchronous.
+   This enables Node.js to be highly concurrent by default. You don't
+   have to worry about setting up multiple threads to make sure you're
+   not blocking the CPU waiting on a database operation. Many Node.js
+   developers find callbacks to be cumbersome. There are numerous MPM
+   packages that provide syntactic sugar on top of callbacks, such as
+   async and the various promises libraries. However, callbacks are
+   handy for determining if your code is doing too much I/O. If you
+   have 12 levels of nested callbacks, the problem is probably not the
+   callbacks, but that you have a very complex function that's very
+   difficult to test.
+
+   
+   
+
+*** quiz
+    Which of the following commands will print out all documents in
+    the 'test' collection in Node.js?
+
+    1) print(db.test.find());
+    
+    2) db.collection('test').find().toArray(console.log);
+
+    3) db.collection('test').findOne(console.log);
+
+    4) console.log(db.collection('test').find().toArray());
+      
+
+    Answer: 2.
