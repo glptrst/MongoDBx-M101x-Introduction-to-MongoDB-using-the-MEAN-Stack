@@ -427,7 +427,6 @@
 
    
    
-
 *** quiz
     Which of the following commands will print out all documents in
     the 'test' collection in Node.js?
@@ -442,3 +441,117 @@
       
 
     Answer: 2.
+** require() basics
+   The require function is Node.js's mechanism for breaking up large
+   projects into small, manageable files. The require function lets
+   you include functions from external modules and other files in a
+   clean and elegant way. You already used the require function once
+   before in order to include the MongoDB Node.js driver.
+
+   In this lesson you'll learn how to integrate your own code with the
+   require function. In this example you have two files called
+   index.js and myfile.js, and the directory called test. The
+   index.js file will be the main entry point for your program-- that
+   is, you'll run node index.js. The test directory contains two more
+   files, index.js and myotherfile.js. The top level index.js file
+   will access code from all of these files.
+
+   $ ls -Rl
+   .:
+   total 4
+   -rw-rw-r--   1 gp             gp              0 2017-09-17 20:46 index.js
+   -rw-rw-r--   1 gp             gp              0 2017-09-17 20:46 myfile.js
+   drwxrwxr-x   2 gp             gp           4096 2017-09-17 20:47 test
+   
+   test:
+   total 0
+   -rw-rw-r--   1 gp             gp              0 2017-09-17 20:47 index.js
+   -rw-rw-r--   1 gp             gp              0 2017-09-17 20:47 myotherfile.js
+   
+
+   The top level index.js file will access code from all of these
+   files. Let's take a look at the top level index.js file.
+
+   Now, Node.js uses file level scoping. This means that by default,
+   any variable or function declared in a file is not accessible
+   outside of that file. Node.js has a global object, but using it is
+   almost always a mistake. The require function is the preferred way
+   to shar code between files.
+
+   index.js:
+   #+BEGIN_SRC javascript
+   var fn = require('./myfile.js');
+   fn();
+   
+   var otherFn = require('./test').other;
+   otherFn();
+   #+END_SRC
+
+   So in this index.js file, you call require on myfile.js and the
+   test directory. First let's take a look at what the myfile.js file
+   looks like.
+
+   myfile.js:
+   #+BEGIN_SRC javascript
+   module.exports = function() {
+     console.log('Hello from myfile.js');
+   };
+   #+END_SRC
+
+   
+   All myfile.js does is assign a function to this module.exports
+   property. Now, you can think of module.exports as the return value
+   that somebody gets when they call require on the file. In this
+   case, calling require on myfile.js gives you a function that prints
+   this hello from myfile.js message.
+
+
+   Now let's consider what happens when you call require of
+   test. Recall that test is a directory, so when you call require on
+   a directory, Node.js looks for an index.js file in that directory
+   and uses that file. In other words, require of ./test is equivalent
+   to require on ./text/index.js.
+
+   Now let's take a look at test/index.js:
+   #+BEGIN_SRC javascript
+   exports.other = require('./myotherfile');
+   #+END_SRC
+
+   Now, this file introduces two subtleties about require. First,
+   notice that this file uses exports.other instead of
+   module.exports. The exports variable is a convenient shorthand for
+   module.exports. This file would do the same thing if you used
+   module.exports.other, rather than exports.other. The only
+   difference is that you can't directly assign to the exports
+   variable. For instance, if you were to use exports rather than
+   module.exports in, say, that myfile.js file, Node.js would error
+   out. You can only assign properties on the exports variable.
+
+   The other subtlety is that this file calls require on
+   myotherfile.js without specifying the test directory. This is
+   because require resolves file names relative to the current files
+   directory. So in other words, the current working directory when
+   you call require on myotherfile within test/index.js is the test
+   directory itself. So you don't need to specify test here.
+
+   Finally, let's take a look at the myotherfile.js file that's in the
+   test directory.
+
+   test/myotherfile.js:
+   #+BEGIN_SRC javascript
+   module.exports = function() {
+     console.log('Hello from test directory');
+   };
+   #+END_SRC
+   
+   This file uses the same module.exports pattern that you saw in
+   myfile.js, however it prints a slightly different message through
+   the screen. Now that you've taken a look through all the files,
+   let's run nodeindex.js. So as you can see, this file prints the
+   message from myfile.js, followed by the message from otherfile.js
+   from the test directory.
+
+   $ node index.js 
+   
+   Hello from myfile.js
+   Hello from test directory
