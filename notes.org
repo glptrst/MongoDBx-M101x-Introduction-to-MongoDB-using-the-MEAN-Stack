@@ -555,3 +555,70 @@
    
    Hello from myfile.js
    Hello from test directory
+*** quiz
+    Which of the following is not a valid way to export a function
+    from a NodeJS file?
+
+    1) module.exports = function() {};
+
+    2) exports.fn = function() {};
+
+    3) exports = function() {};
+
+       
+    Answer: 3.
+
+** Using mocha for testing
+   Mocha is the most popular testing framework for Node.js. It's also
+   useful for testing client side JavaScript. To install Mocha, put a
+   dependency on Mocha version 2.2.4 in your package.json and run NPM
+   install.
+
+   Let's take a look at what real Mocha tests look like.
+
+   So Mocha uses behavior driven development or BDD for short syntax.
+   This means that Mocha uses these /describe/ and /it/ functions in place
+   of J unit style suites and tests. BDD style is designed to read
+   more like stories than tests. Now, Mocha does not come with its own
+   assertion framework, so you can use whichever one you choose.
+   There are several alternative assertion frameworks available on
+   NPM. But for the purposes of this course, the built-in Node.js
+   assert module that you will include here is good enough.
+   
+   test.js:
+  #+BEGIN_SRC javascript
+  var assert = require('assert');
+
+  describe('my feature', function() {
+    it('works', function() {
+      assert.equal('A', 'A');
+    });
+
+    it('fails gracefully', function() {
+      assert.throws(function() {
+        throw 'Error!';
+      });
+    });
+  });
+
+  describe('my other feature', function() {
+    it('async', function(done) {
+      setTimeout(function() {
+        done();
+      }, 25);
+    });
+  });
+  #+END_SRC
+
+   Now, in order to run this test.js file, Mocha has an executable
+   that's installed in node_modules/.bin.  You can use this
+   node_modules/.bin/mocha command to run the test.js file.
+
+   $ node_modules/.bin/mocha test.js
+
+   
+   And as you can see, all these three tests that you saw in this file
+   all succeed.
+   
+
+   
