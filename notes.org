@@ -424,8 +424,6 @@
    have 12 levels of nested callbacks, the problem is probably not the
    callbacks, but that you have a very complex function that's very
    difficult to test.
-
-   
    
 *** quiz
     Which of the following commands will print out all documents in
@@ -616,9 +614,97 @@
 
    $ node_modules/.bin/mocha test.js
 
-   
    And as you can see, all these three tests that you saw in this file
-   all succeed.
+   all succeed:
+   //////////////////////
+   my feature
+   [0G    ✓ works
+   [0G    ✓ fails gracefully
+   
+   my other feature
+   [0G    ✓ async
+   
+   
+   3 passing (43ms)
+   //////////////////////
+
+   The Mocha executable has numerous useful features. For instance,
+   the -g flag which is short for --grep allows you to run tests whose
+   names match a certain regular expression. For instance, specifying
+   -g fail to the Mocha executable will only run this it fails
+   gracefully test. Similarly, specifying -g other will run only the
+   tests that are under this my other feature describe block, this
+   particular describe call.
+
+   /////////////////////
+   $ node_modules/.bin/mocha -g "fail" test.js
+
+   
+   my feature
+   [0G    ✓ fails gracefully
+   
+   
+   1 passing (11ms)
+   /////////////////////
+
+   Mocha also has the ability to use different reporters for test
+   output. Reporters control the format that your test results are
+   output in. By default, Mocha uses the spec reporter. However, Mocha
+   has several other built-in reporters. For instance, the dot
+   reporter outputs a very concise format using only dots, which is
+   handy for situations when you have thousands of tests.
+
+   ///////////////////
+   $ node_modules/.bin/mocha -R dot test.js
+   
+   ․․․
+   
+   3 passing (36ms)
+   ///////////////////
+   
+   There's also this x unit format, which outputs test results in the
+   standard execute in XML format.
+
+   //////////////////
+   $ node_modules/.bin/mocha -R xunit test.js
+
+   <testsuite name="Mocha Tests" tests="3" failures="0" errors="0" skipped="0" timestamp="Wed, 20 Sep 2017 15:54:08 GMT" time="0.034">
+   <testcase classname="my feature" name="works" time="0.001"/>
+   <testcase classname="my feature" name="fails gracefully" time="0.001"/>
+   <testcase classname="my other feature" name="async" time="0.029"/>
+   </testsuite>
+   //////////////////
+
+   Finally, my personal favorite built-in Mocha reported is the nyan
+   cat reporter, which outputs a happy little Ascii kitten when all
+   your tests succeed.
+
+*** quiz
+    Suppose you have the following mocha tests:
+    
+    #+BEGIN_SRC javascript
+    describe('my feature', function() {
+      it('works', function() {});
+      it('fails gracefully', function() {});
+    });
+    describe('my other feature', function() {
+      it('sorta works', function() {});
+    });
+    #+END_SRC
+
+    How many tests would run if you ran the above tests with
+    ./node_modules/.bin/mocha -g "works"?
+
+    Correct Answer: 2.
+
+
+
+
+
+
    
 
+
+   
+   
    
