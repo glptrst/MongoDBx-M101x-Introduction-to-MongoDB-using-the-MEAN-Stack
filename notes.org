@@ -696,15 +696,110 @@
     ./node_modules/.bin/mocha -g "works"?
 
     Correct Answer: 2.
+    
+** package.json: npm run-script
+   Npm is not just a package manager. It also has some handy
+   shortcuts and workflow helpers that will be used extensively in
+   this course. The
+   $ npm help
+   command gives you a list of all the things you can do with npm.
 
-
-
-
-
-
+   Let's look a little more closely at the npm test command by running
+   $ npm test --help.
    
+   $ npm test
+   runs the test script defined in the package.json file.
+   
+   package.json:
+   #+BEGIN_SRC javascript
+   {
+     "scripts": {
+       "test": "mocha test.js",
+       "test-kitten": "mocha -R nyan test.js"
+     },
+     "dependencies": {
+       "mocha": "2.2.4"
+     }
+   }
+   #+END_SRC
 
+   Here you have a package.json that defines two named scripts. The
+   test script that runs mocha with the default spec reporter. Note
+   that the test script uses mocha rather than
+   ./node_modules/.bin/mocha. This is because npm is smart enough to
+   look in the node_modules/.bin/ directory for executables when
+   you're running these scripts. Now, when you run 
+   $ npm test
+   you should see the same old test output.
 
+   Good node.js code takes advantage of npm install and npm
+   test. Ideally, to get started with a new node.js code base, all you
+   need to do is run npm install to get all the dependencies and npm
+   test to run the tests, and then you're ready to start
+   hacking. There's almost always no need to set up an IDE or set up
+   any other non-package dot JSON dependencies other than node and
+   npm.
+
+   There's almost always no need to set up an IDE or set up any other
+   non-package dot JSON dependencies other than node and npm. You
+   could also have additional scripts that you can run in a manner
+   similar to npm test. Common use cases include scripts that output
+   test results for continuous integration frameworks like Travis and
+   shortcuts for starting Gulp rules, which you will learn about in
+   the Gulp lesson. For instance, if you wanted to have a separate
+   script that output test results using the nyan cat reporter for
+   some reason-- say you really like kittens-- you can define a script
+   like this test kitten script. Running 
+   $ npm run test-kitten
+      will run this test kitten script. As you can see, you get a nice
+   happy nyan cat. As a matter of fact, npm test is actually just a
+   convenient shorthand for npm run test.
+
+   You may have heard that npm install has a -g flag that allows
+   you to install modules globally. For instance
+   $ npm install mocha -g 
    
+   will enable you to access Mocha from the command line. Installing
+   Mocha with -g enables you to run
+   $ mocha test.js 
    
+   rather than using 
+   $ node_module/.bin/mocha
+
+   from the Command line, which is more concise. However, the downside
+   of relying on executables installed via -g is that all node
+   projects on your machine must be compatible with the globally
+   installed version of Mocha. Older projects may assume Mocha 1 dot
+   x. They may not work with Mocha version 2.2.4. Furthermore,
+   package.json provides you no way of declaring that a module
+   requires a certain globally installed version of mocha, which
+   breaks the implicit contract that npm install is sufficient to at
+   least run the module's tests. Therefore, it is preferable to use
+   locally installed dependencies and use the npm run command rather
+   than asking users to use npm install -g.
    
+*** quiz
+    Which of the following package.json scripts will run all tests
+    whose name contains "unit"?
+
+    #+BEGIN_SRC javascript
+    {
+      "scripts": {
+        "test-1": "mocha -g 'unit' test/*",
+        "test-2": "mocha test/*"
+        "test-3": "mocha -R 'unit' test/*",
+        "test-4": "mocha test/unit"
+      }
+    }
+    #+END_SRC
+   
+    1) npm run test-1
+
+    2) npm run test-2
+
+    3) npm run test-3
+
+    4) npm run test-4
+
+      
+    Answer: npm run test-1.
