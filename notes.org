@@ -803,3 +803,105 @@
 
       
     Answer: npm run test-1.
+** Running mocha tests with gulp
+   
+   In the npm run lesson, you saw how to use Mocha to run some basic
+   tests. However, you had to run the test manually by running a
+   Shell command. Another key advantage of node.js and the npm
+   ecosystem is that there are tools to automate virtually everything,
+   including running tests whenever a file changes.
+
+   Now Gulp is a tool that enables you to watch a set of files and
+   automatically re-run your tests whenever a file changes. So when
+   you run gulp, gulp starts and waits for a file to change. When it
+   changes, it runs your tests, and then it reports the results and
+   goes back to waiting for more file changes. This enables you to get
+   fast feedback on your work. You don't have to re-type your test
+   command to run your tests. All you have to do is hit Control-S. Gulp
+   is the leading node.js task runner and build system. gulp is
+   organized as a lightweight core that provides a highly pluggable
+   API. Typically when you use gulp, you'll install the gulp core,
+   followed by numerous gulp plug-ins. There are gulp plug-ins for a
+   wide variety of node.js packages. 
+
+   package.json:
+   #+BEGIN_SRC javascript
+   {
+     "scripts": {
+       "test": "mocha test.js",
+       "watch": "gulp watch"
+     },
+     "devDependencies": {
+       "gulp": "3.8.11",
+       "gulp-mocha": "2.0.1",
+       "mocha": "2.2.4"
+     }
+   }
+   #+END_SRC
+
+   As you might have guessed, the gulp mocha package is a mocha
+   plug-in for gulp.
+
+   
+   Gulp code is separated out into tasks. By default, your package's
+   Gulp tasks are listed in a file called gulpfile.js.
+
+   gulpfile.js:
+   #+BEGIN_SRC javascript
+   var gulp = require('gulp');
+   var mocha = require('gulp-mocha');
+
+   gulp.task('test', function() {
+     gulp.
+       src('./test.js').
+       pipe(mocha()).
+       on('error', function(err) {
+         this.emit('end');
+       });
+   });
+
+   gulp.task('watch', function() {
+     gulp.watch('./*.js', ['test']);
+   });
+   #+END_SRC
+   
+   So in this example, gulpfile, you have two tasks. The first is this
+   test task. This task takes this test.js file and pipes it into the
+   mocha plug-in and catches any errors. This task does the same thing
+   as the npm test script that you saw in the npm run lesson. As you
+   can see, all gulp did was run the test script for you. So far
+   though, the only thing that introducing gulp has done is make your
+   test command longer. The real magic is in the other gulp task. The
+   watch task uses the gulp.watch function, which watches the
+   specified files for changes and executes the corresponding
+   tasks. In this case, the watch task watches every js file in the
+   current directory and re-runs the test task when any of the files
+   change.
+
+   Now, in order to make gulp easier to run, let's add a watch script
+   package.json, that will run gulp watch for you.  And now when
+   you run npm run watch, gulp watch will start, and gulp will start
+   watching the file system for changes.
+
+   So now let's go to test.js and make one of the tests fail. So
+   let's change this test to assert that A is equal to B, which is
+   obviously false, and let's his colon W to save the file. As you
+   can see, Gulp automatically re-ran the tests using the default
+   Mocha reporter and caught that, OK, A does not equal B. Now, if
+   you go change it back, colon W, Gulp re-runs the test again, and
+   the test succeeds this time.
+
+*** quiz
+    Which of the following will tell gulp to watch all files under the
+    "test" directory and run the 'test' task when one changes?
+
+    1) gulp.task('test', function() { gulp.src('test/**').pipe(mocha()); });
+
+    2) gulp.task('test', function() { gulp.watch('test/**', ['mocha']); });
+
+    3) gulp.watch('test/**', ['test']);
+
+    4) gulp.watch('*.js', ['test']);
+
+
+    Answer: 3.
