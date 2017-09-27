@@ -1,4 +1,5 @@
 #+TITLE: Introduction to MongoDB using the MEAN Stack
+#+OPTIONS: toc:nil
 
 * Introduction to MongoDB and NodeJS
 ** Starting a standalone mongod and connecting with shell
@@ -7,16 +8,24 @@
     Create the dir ~/data/db
     
     Start mongod with:
-    $ mongod --dbpath ~/data/db
+    #+BEGIN_SRC 
+    $ mongod --dbpath ~/data/db    
+    #+END_SRC
     
     In another shell you can start the mongo shell you allows you to
     do basic experimentation with MongoDB:
+    #+BEGIN_SRC 
     $ mongo
+    #+END_SRC
 
     MongoDB stores object as BSON, which is a strict superset of JSON.
     
-    Insert a single document with just one key, hello, and one value, world:
+    Insert a single document with just one key, hello, and one value,
+    world:
+
+    #+BEGIN_SRC javascript
     > db.test.insert({ hello: "world"});
+    #+END_SRC
 
     MongoDB stores document in separate collections. Each collection
     belongs to a database, and collection names are unique within a
@@ -25,7 +34,9 @@
     collection named 'test'.
     
     Then we can query it back:
+    #+BEGIN_SRC javascript
     > db.test.findOne({ hello: "world"});
+    #+END_SRC
 
     In this case we have told MongoDB to search for document in the
     collection named 'test'.
@@ -35,24 +46,43 @@
      which the 'leadActor' key equals "Arnold Schwarzenegger", which
      of the following commands would you execute in the mongo shell?
      
-     1) db.exec('SELECT * FROM movies WHERE leadActor="Arnold
-        Schwarzenegger"')
-
-     2) db.movies.find({ leadActor: 'Arnold Schwarzenegger' })
-
-     3) db.movies.insert({ leadActor: 'Arnold Schwarzenegger' })
-
-     4) db.sample.find({ leadActor: 'Arnold Schwarzenegger' })
-
+     1) 
 	
+        #+BEGIN_SRC javascript
+        db.exec('SELECT * FROM movies WHERE leadActor="Arnold Schwarzenegger"')
+        #+END_SRC
+
+     2) 
+	
+	#+BEGIN_SRC javascript
+        db.movies.find({ leadActor: 'Arnold Schwarzenegger' })	
+	#+END_SRC
+
+     3) 
+
+	#+BEGIN_SRC javascript
+	db.movies.insert({ leadActor: 'Arnold Schwarzenegger' })
+	#+END_SRC
+
+     4) 
+
+	#+BEGIN_SRC javascript
+	db.sample.find({ leadActor: 'Arnold Schwarzenegger' })
+	#+END_SRC
+	
+
      Answer: 2.
 ** package.json: installing dependencies with npm
     Install NodeJS. NodeJS comes with npm included.
 
     With 
+    #+BEGIN_SRC 
     $ node -v
+    #+END_SRC
     and 
+    #+BEGIN_SRC 
     $ npm -v 
+    #+END_SRC
     you can check the versions.
     
     When starting a new NodeJS application, the first thing you want
@@ -65,14 +95,17 @@
     
     Let's create a package dot json that depends on Underscore.
     Create a file name 'package.json' with this content:
+    #+BEGIN_SRC javascript
     {
       "dependencies": {
         "underscore" "1.5.2"
       }
     }
-    
+    #+END_SRC
     To install the dependencies, run:
-    $ npm install
+    #+BEGIN_SRC 
+    $ npm install    
+    #+END_SRC
 
     You should see now a node_modules directory in your current
     working directory. If you look in the node_modules directory you
@@ -95,7 +128,9 @@
 #+END_SRC
     
     You can now run the program with:
-    $ node index.js
+    #+BEGIN_SRC 
+    $ node index.js    
+    #+END_SRC
 
     Note that each NodeJS project has its own node underscore modules
     directory where npm installs packages.
@@ -133,11 +168,13 @@
    The first step is to add a dependency on MongoDB version
    2.0.35 to your package.json.
 
+   #+BEGIN_SRC javascript
    {
      "dependencies": {
        "mongodb": "2.0.35"
      }
    }
+   #+END_SRC
 
    (We could have written "~2.0" to get the latest 2.0 release)
 
@@ -369,9 +406,11 @@
    an event loop because JavaScript interpreters run in a loop that
    looks something like this:
 
+   #+BEGIN_SRC javascript 
    while (waitForEvent()) {
      processEvent();
    }
+   #+END_SRC
 
    This loop has numerous interesting semantics. First of all, the
    loop is single threaded, so only one event handler can run at any
@@ -429,13 +468,24 @@
     Which of the following commands will print out all documents in
     the 'test' collection in Node.js?
 
-    1) print(db.test.find());
-    
-    2) db.collection('test').find().toArray(console.log);
+    1) 
+       #+BEGIN_SRC javascript
+       print(db.test.find());       
+       #+END_SRC
+    2) 
+       #+BEGIN_SRC javascript
+       db.collection('test').find().toArray(console.log);
+       #+END_SRC
 
-    3) db.collection('test').findOne(console.log);
+    3) 
+       #+BEGIN_SRC javascript
+       db.collection('test').findOne(console.log);
+       #+END_SRC
 
-    4) console.log(db.collection('test').find().toArray());
+    4) 
+       #+BEGIN_SRC javascript
+       console.log(db.collection('test').find().toArray());
+       #+END_SRC
       
 
     Answer: 2.
@@ -454,6 +504,7 @@
    files, index.js and myotherfile.js. The top level index.js file
    will access code from all of these files.
 
+   #+BEGIN_SRC 
    $ ls -Rl
    .:
    total 4
@@ -465,7 +516,7 @@
    total 0
    -rw-rw-r--   1 gp             gp              0 2017-09-17 20:47 index.js
    -rw-rw-r--   1 gp             gp              0 2017-09-17 20:47 myotherfile.js
-   
+   #+END_SRC
 
    The top level index.js file will access code from all of these
    files. Let's take a look at the top level index.js file.
@@ -549,10 +600,12 @@
    message from myfile.js, followed by the message from otherfile.js
    from the test directory.
 
+   #+BEGIN_SRC 
    $ node index.js 
    
    Hello from myfile.js
    Hello from test directory
+   #+END_SRC
 *** quiz
     Which of the following is not a valid way to export a function
     from a NodeJS file?
@@ -612,11 +665,14 @@
    that's installed in node_modules/.bin.  You can use this
    node_modules/.bin/mocha command to run the test.js file.
 
-   $ node_modules/.bin/mocha test.js
+   #+BEGIN_SRC 
+   $ node_modules/.bin/mocha test.js   
+   #+END_SRC
 
    And as you can see, all these three tests that you saw in this file
    all succeed:
-   //////////////////////
+
+   #+BEGIN_SRC 
    my feature
    [0G    ✓ works
    [0G    ✓ fails gracefully
@@ -626,7 +682,7 @@
    
    
    3 passing (43ms)
-   //////////////////////
+   #+END_SRC
 
    The Mocha executable has numerous useful features. For instance,
    the -g flag which is short for --grep allows you to run tests whose
@@ -636,7 +692,7 @@
    tests that are under this my other feature describe block, this
    particular describe call.
 
-   /////////////////////
+   #+BEGIN_SRC 
    $ node_modules/.bin/mocha -g "fail" test.js
 
    
@@ -645,7 +701,7 @@
    
    
    1 passing (11ms)
-   /////////////////////
+   #+END_SRC
 
    Mocha also has the ability to use different reporters for test
    output. Reporters control the format that your test results are
@@ -654,18 +710,18 @@
    reporter outputs a very concise format using only dots, which is
    handy for situations when you have thousands of tests.
 
-   ///////////////////
+   #+BEGIN_SRC 
    $ node_modules/.bin/mocha -R dot test.js
    
    ․․․
    
-   3 passing (36ms)
-   ///////////////////
+   3 passing (36ms)   
+   #+END_SRC
    
    There's also this x unit format, which outputs test results in the
    standard execute in XML format.
 
-   //////////////////
+   #+BEGIN_SRC 
    $ node_modules/.bin/mocha -R xunit test.js
 
    <testsuite name="Mocha Tests" tests="3" failures="0" errors="0" skipped="0" timestamp="Wed, 20 Sep 2017 15:54:08 GMT" time="0.034">
@@ -673,7 +729,7 @@
    <testcase classname="my feature" name="fails gracefully" time="0.001"/>
    <testcase classname="my other feature" name="async" time="0.029"/>
    </testsuite>
-   //////////////////
+   #+END_SRC
 
    Finally, my personal favorite built-in Mocha reported is the nyan
    cat reporter, which outputs a happy little Ascii kitten when all
@@ -701,13 +757,19 @@
    Npm is not just a package manager. It also has some handy
    shortcuts and workflow helpers that will be used extensively in
    this course. The
+   #+BEGIN_SRC 
    $ npm help
+   #+END_SRC
    command gives you a list of all the things you can do with npm.
 
    Let's look a little more closely at the npm test command by running
-   $ npm test --help.
+   #+BEGIN_SRC 
+   $ npm test --help.   
+   #+END_SRC
    
-   $ npm test
+   #+BEGIN_SRC 
+   $ npm test   
+   #+END_SRC
    runs the test script defined in the package.json file.
    
    package.json:
@@ -750,21 +812,29 @@
    script that output test results using the nyan cat reporter for
    some reason-- say you really like kittens-- you can define a script
    like this test kitten script. Running 
-   $ npm run test-kitten
-      will run this test kitten script. As you can see, you get a nice
+   #+BEGIN_SRC 
+   $ npm run test-kitten   
+   #+END_SRC
+   will run this test kitten script. As you can see, you get a nice
    happy nyan cat. As a matter of fact, npm test is actually just a
    convenient shorthand for npm run test.
 
    You may have heard that npm install has a -g flag that allows
    you to install modules globally. For instance
-   $ npm install mocha -g 
+   #+BEGIN_SRC 
+   $ npm install mocha -g    
+   #+END_SRC
    
    will enable you to access Mocha from the command line. Installing
    Mocha with -g enables you to run
-   $ mocha test.js 
+   #+BEGIN_SRC 
+   $ mocha test.js   
+   #+END_SRC
    
    rather than using 
-   $ node_module/.bin/mocha
+   #+BEGIN_SRC 
+   $ node_module/.bin/mocha   
+   #+END_SRC
 
    from the Command line, which is more concise. However, the downside
    of relying on executables installed via -g is that all node
@@ -895,13 +965,25 @@
     Which of the following will tell gulp to watch all files under the
     "test" directory and run the 'test' task when one changes?
 
-    1) gulp.task('test', function() { gulp.src('test/**').pipe(mocha()); });
+    1) 
+       #+BEGIN_SRC javascript
+       gulp.task('test', function() { gulp.src('test/**').pipe(mocha()); });
+       #+END_SRC
 
-    2) gulp.task('test', function() { gulp.watch('test/**', ['mocha']); });
+    2) 
+       #+BEGIN_SRC javascript
+       gulp.task('test', function() { gulp.watch('test/**', ['mocha']); });
+       #+END_SRC
 
-    3) gulp.watch('test/**', ['test']);
+    3) 
+       #+BEGIN_SRC javascript
+       gulp.watch('test/**', ['test']);
+       #+END_SRC
 
-    4) gulp.watch('*.js', ['test']);
+    4) 
+       #+BEGIN_SRC javascript
+       gulp.watch('*.js', ['test']);
+       #+END_SRC
 
 
     Answer: 3.
